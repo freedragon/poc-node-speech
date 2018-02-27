@@ -41,6 +41,7 @@ var connector = new builder.ChatConnector({
 server.post('/api/messages', connector.listen());
 
 var bot = new builder.UniversalBot(connector, function (session) {
+    var textMsg = 'Did you upload an audio file? I\'m more of an audible person. Try sending me a wav file';
     if (hasAudioAttachment(session)) {
         var stream = getAudioStreamFromMessage(session.message);
         speechService.getTextFromAudioStream(stream)
@@ -52,9 +53,9 @@ var bot = new builder.UniversalBot(connector, function (session) {
                 console.error(error);
             });
     } else {
-        session.send('Did you upload an audio file? I\'m more of an audible person. Try sending me a wav file');
+        session.send(textMsg);
     }
-    bing.synthesize('All for one and one for all').then(result => {
+    bing.synthesize(textMsg).then(result => {
         // var file = path.join(os.tmpdir(), 'bingspeech-api-client1.wav');
         var file = path.join('.', 'bingspeech-api-client1.wav');
         var wstream = fs.createWriteStream(file);
