@@ -14,7 +14,8 @@ var builder = require('botbuilder'),
     os = require('os'),
     path = require('path'),
     util = require('util'),
-    client = require('bingspeech-api-client/lib/client');
+    client = require('bingspeech-api-client/lib/client'),
+    speechService = require('./speech-service.js');
 
 if (!process.env.MICROSOFT_BING_SPEECH_KEY) {
     console.log('You need to set a MICROSOFT_BING_SPEECH_KEY env var');
@@ -44,6 +45,16 @@ var bot = new builder.UniversalBot(connector, function (session) {
     var textMsg = 'Did you upload an audio file? I\'m more of an audible person. Try sending me a wav file';
     if (hasAudioAttachment(session)) {
         var stream = getAudioStreamFromMessage(session.message);
+        /**
+         * Speech To Text example
+         */
+        // var wave = fs.readFileSync(__dirname + '/example.wav');
+        /*
+        bing.recognize(stream).then(result => {
+            console.log('STT Result:', result);
+            session.send(processText(text));
+        }); */
+
         speechService.getTextFromAudioStream(stream)
             .then(function (text) {
                 session.send(processText(text));
