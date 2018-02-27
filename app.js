@@ -11,7 +11,9 @@ var builder = require('botbuilder'),
     restify = require('restify'),
     request = require('request'),
     url = require('url'),
-    os = require('os')
+    os = require('os'),
+    path = require('path'),
+    util = require('util'),
     client = require('bingspeech-api-client/lib/client');
 
 if (!process.env.MICROSOFT_BING_SPEECH_KEY) {
