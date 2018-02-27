@@ -1,7 +1,7 @@
 {
-  "name": "botbuilder-sample-speech-to-text",
+  "name": "poc-node-speech",
   "version": "1.0.0",
-  "description": "Bot Builder Sample - Speech To Text",
+  "description": "Bot Builder Sample with STT and TTS",
   "scripts": {
     "start": "node app.js"
   },
@@ -14,11 +14,11 @@
     "botbuilder-samples"
   ],
   "bugs": {
-    "url": "https://github.com/Microsoft/BotBuilder-Samples/issues"
+    "url": "https://github.com/freedragon/poc-node-speech/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Microsoft/BotBuilder-Samples.git"
+    "url": "https://github.com/freedragon/poc-node-speech.git"
   },
   "dependencies": {
     "botbuilder": "^3.7.0",
