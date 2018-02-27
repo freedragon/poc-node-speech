@@ -11,7 +11,14 @@ var builder = require('botbuilder'),
     restify = require('restify'),
     request = require('request'),
     url = require('url'),
-    speechService = require('./speech-service.js');
+    os = require('os')
+    client = require('bingspeech-api-client/lib/client');
+
+if (!process.env.MICROSOFT_BING_SPEECH_KEY) {
+    console.log('You need to set a MICROSOFT_BING_SPEECH_KEY env var');
+}
+
+var bing = new client.BingSpeechClient(process.env.MICROSOFT_BING_SPEECH_KEY);
 
 //=========================================================
 // Bot Setup
@@ -45,6 +52,15 @@ var bot = new builder.UniversalBot(connector, function (session) {
     } else {
         session.send('Did you upload an audio file? I\'m more of an audible person. Try sending me a wav file');
     }
+    bing.synthesize('All for one and one for all').then(result => {
+        // var file = path.join(os.tmpdir(), 'bingspeech-api-client1.wav');
+        var file = path.join('.', 'bingspeech-api-client1.wav');
+        var wstream = fs.createWriteStream(file);
+        wstream.write(result.wave);
+        console.log('Text To Speech completed. Audio file written to', file);
+
+        sendInline(session, file, 'audio/wav', 'bing-synthesized.wav')
+      });
 });
 
 //=========================================================
@@ -118,3 +134,23 @@ bot.on('conversationUpdate', function (message) {
         });
     }
 });
+
+// Sends attachment inline in base64
+function sendInline(session, filePath, contentType, attachmentFileName) {
+    fs.readFile(filePath, function (err, data) {
+        if (err) {
+            return session.send('Oops. Error reading file.');
+        }
+
+        var base64 = Buffer.from(data).toString('base64');
+
+        var msg = new builder.Message(session)
+            .addAttachment({
+                contentUrl: util.format('data:%s;base64,%s', contentType, base64),
+                contentType: contentType,
+                name: attachmentFileName
+            });
+
+        session.send(msg);
+    });
+}
